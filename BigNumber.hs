@@ -1,16 +1,17 @@
 import Data.Char(digitToInt)
 
-data BigNumber = BigNumber {sign :: Bool,  digits :: [Int]}
+data BigNumber = BigNumber (sign :: Bool,  digits :: [Int])
 
 --scanner :: String -> BigNumber
 --scanner s = 
 
 numbersOfBig :: BigNumber -> String 
-numbersOfBig big = intToDigit (head (digits(big))) ++ numbersOfBig(bigRec)
-                let bigRec = BigNumber {sign = sign(big), digits = tail digits(big)}
+numbersOfBig big = intToDigit (head (scnd big)) ++ numbersOfBig(tail (scnd big))
                 
 output :: BigNumber -> String
-output big  = signOfBig big ++ numbersOfBig big
+output empty = "0"
+output False _ = "-" ++ numbersOfBig big
+output True _ = "+" ++ numbersOfBig big 
 
 {-
 somaBN :: BigNumber -> BigNumber -> BigNumber
