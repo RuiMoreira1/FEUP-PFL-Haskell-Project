@@ -1,16 +1,9 @@
 import Data.Char(digitToInt)
 
-data Sign = NEG | POS | ZERO 
+data BigNumber = BigNumber {sign :: Bool,  digits :: [Int]}
 
-data BigNumber = BigNumber {sign :: Sign,  digits :: [Int]}
-
-scanner :: String -> BigNumber
-scanner s = 
-
-signOfBig :: BigNumber -> String 
-signOfBig big | sign(big) == ZERO = "0"
-              | sign(big) == NEG = "-"
-              | sign(big) == POS = "+"
+--scanner :: String -> BigNumber
+--scanner s = 
 
 numbersOfBig :: BigNumber -> String 
 numbersOfBig big = intToDigit (head (digits(big))) ++ numbersOfBig(bigRec)
