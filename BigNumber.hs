@@ -1,5 +1,7 @@
 import Data.Char(digitToInt, intToDigit)
 import Distribution.Compat.Lens (_1)
+import Graphics.Win32 (BITMAP)
+import Data.Text.Internal.Builder.Int.Digits (digits)
 
 data BigNumber = BN Bool [Int] | Zero deriving (Show)
 
@@ -39,7 +41,6 @@ output Zero = "0"
 output (BN False digits) = "-" ++ trimString (numbersToString digits)
 output (BN True digits) = "+" ++ trimString (numbersToString digits)
 
-
 somaBN :: BigNumber -> BigNumber -> BigNumber
 somaBN Zero (BN sign digits) = BN sign digits
 somaBN (BN sign digits) Zero = BN sign digits
@@ -47,24 +48,51 @@ somaBN (BN sign digits) Zero = BN sign digits
 --somaBN (BN True digitsA) (BN True digitsB) = (BN True )
 --somaBN (BN _ digitsA) (BN _ digitsB) = (BN )
 
-{-}
+
+notBN :: BigNumber -> BigNumber
+notBN Zero = Zero
+notBN (BN sign digits) = BN (not sign) digits
+{-
 subBN :: BigNumber -> BigNumber -> BigNumber
 subBN _ Zero = Zero
 subBN Zero (BN sign digits) = BN (not sign) digits
-subBN (BN _ digitsA) (BN True digitsB) = 
-subBN (BN _ _) (BN False _) = somaBN (BN __ _) (BN False _)
+subBN (BN True digitsA) (BN False digitsB) = somaBN (BN True digitsA) (BN True digitsB) 
+subBN (BN False digitsA) (BN True digitsB) = notBN (somaBN (BN True digitsA) (BN True digitsB))
+subBN (BN False digitsA) (BN False digitsB) = notBN (subBN (BN True digitsA) (BN True digitsB))
+subBN (BN True digitsA) (BN True digitsB) = BN False [(a + (if t then 10 else 0)) - (b + c) | a<-digitsA, b<-digitsB, let c = 0, let t = a < (b + c)]  --the False has to be changed final sign
 -}
+
+subAUX :: BigNumber -> BigNumber -> BigNumber
+subAUX bigA bigB = if greater (bigA bigB) then subBN (bigA bigB) else subBN notBN (subBN (bigB - bigA)) 
+
+greater :: BigNumber -> BigNumber -> Bool
+greater (BN False _) (BN True _) = False 
+greater (BN True _) (BN False _) = True
+greater (BN _ digitsA) (BN _ digitsB) =  False
+{-
+(+a) - (-b) = a + b
+(-a) - (+b) = -(a + b)
+(-a) - (-b) = b - a = -(a - b)
+(+a) - (+b) = a - b
+
+a + (-b) = b - a
+-a + (-b) = -(a + b)
+a + b = a + b
+-a + b = b - a
+ -}
 
 mulBN :: BigNumber -> BigNumber -> BigNumber
 mulBN Zero _ = Zero
 mulBN _ Zero = Zero
+
 --mulBN (BN False digitsA) (BN True digitsB) = (BN False )
 --mulBN (BN True digitsA) (BN False digitsB) = (BN False )
 --mulBN (BN _ digitsA) (BN _ digitsB) = (BN True )
 
 
---divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
---divBN b1 b2 = 
+divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
+divBN _ Zero = error "Division by zero not allowed"
+divBN Zero _ = (Zero, Zero)
 
 --subtrair
 --count n times
