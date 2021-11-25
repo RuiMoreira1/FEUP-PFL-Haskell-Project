@@ -1,4 +1,5 @@
 import Data.Char(digitToInt, intToDigit)
+import Distribution.Compat.Lens (_1)
 
 data BigNumber = BN Bool [Int] | Zero deriving (Show)
 
@@ -38,16 +39,22 @@ output Zero = "0"
 output (BN False digits) = "-" ++ trimString (numbersToString digits)
 output (BN True digits) = "+" ++ trimString (numbersToString digits)
 
-{-
-somaBN :: BigNumber -> BigNumber -> BigNumber
-somaBN b1 b2 =
 
+somaBN :: BigNumber -> BigNumber -> BigNumber
+somaBN Zero (BN sign digits) = BN sign digits
+somaBN (BN sign digits) Zero = BN sign digits
+--somaBN (BN False digitsA) (BN False digitsB) = (BN False )
+--somaBN (BN True digitsA) (BN True digitsB) = (BN True )
+--somaBN (BN _ digitsA) (BN _ digitsB) = (BN )
+
+{-}
 subBN :: BigNumber -> BigNumber -> BigNumber
 subBN _ Zero = Zero
-subBN Zero (BigNumber sign digits) = BigNumber (not sign) digits
+subBN Zero (BN sign digits) = BN (not sign) digits
 subBN (BN _ digitsA) (BN True digitsB) = 
 subBN (BN _ _) (BN False _) = somaBN (BN __ _) (BN False _)
 -}
+
 mulBN :: BigNumber -> BigNumber -> BigNumber
 mulBN Zero _ = Zero
 mulBN _ Zero = Zero
