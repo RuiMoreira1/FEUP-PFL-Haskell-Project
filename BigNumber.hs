@@ -39,18 +39,36 @@ output Zero = "0"
 output (BN False digits) = "-" ++ trimString (numbersToString digits)
 output (BN True digits) = "+" ++ trimString (numbersToString digits)
 
+{-} Helper function to check wether BigNumber a > BigNUmber b 
+0 -> if a > b 
+1 -> if b > a
+2 -> if a == b -}
+biggerBN :: BigNumber -> BigNumber -> Int
+biggerBN Zero (BN _ _) = 1
+biggerBN (BN _ _) Zero = 0
+biggerBN Zero Zero = 4
+biggerBN (BN _ digitsA) (BN _ digitsB)
+    | digitsA == digitsB = 2
+    | length digitsA > length digitsB = 0
+    | length digitsB > length digitsA = 1
+    | head digitsA > head digitsB = 0
+    | head digitsB > head digitsA = 1
+    | otherwise = biggerBN (BN True (tail digitsA)) (BN True (tail digitsB)) {-} In case the heads are equal compare the next number -}
+
+
+
 notBN :: BigNumber -> BigNumber
 notBN Zero = Zero
 notBN (BN sign digits) = BN (not sign) digits
 
 somaBN :: BigNumber -> BigNumber -> BigNumber
-somaBN Zero Zero = 0
+somaBN Zero Zero = Zero
 somaBN Zero (BN sign digits) = BN sign digits
 somaBN (BN sign digits) Zero = BN sign digits
-somaBN (BN False digitsA) (BN False digitsB) = notBN (somaBNaux (BN True digitsA) (BN True digitsB))     {-} -a + (-b) <=> -a - b <=> -(a+b) -}
-somaBN (BN True digitsA) (BN True digitsB) = somaBNaux (BN True digitsA) (BN True digitsB)               {-} a + b  -}
-somaBN (BN True digitsA) (BN False digitsB) =  subBN (BN True digitsA) (BN False digitsB)                {-} a + (-b) <=> a - b -}
-somaBN (BN False digitsA) (Bn True digitsB) =  subBN (BN True digitsB) (BN False digitsA)                {-} -a + b <=> b - a -}
+somaBN (BN False digitsA) (BN False digitsB) = notBN (BN True (somaBNaux 0 digitsA digitsB))             {-} -a + (-b) <=> -a - b <=> -(a+b) -}
+somaBN (BN True digitsA) (BN True digitsB) = BN True (somaBNaux 0 digitsA digitsB)                       {-} a + b  -}
+somaBN (BN True digitsA) (BN False digitsB) = subBN (BN True digitsA) (BN False digitsB)                 {-} a + (-b) <=> a - b -}
+somaBN (BN False digitsA) (BN True digitsB) = subBN (BN True digitsB) (BN False digitsA)                 {-} -a + b <=> b - a -}
 
 
 {-} One strategy would be giving the function the big number list already reversed
@@ -78,13 +96,30 @@ somaBNaux inc a b = somaBNaux (div sum''' 10) (init a) (init b) ++ [mod sum''' 1
 
 
 subBN :: BigNumber -> BigNumber -> BigNumber
-subBN _ Zero = Zero
+subBN Zero Zero = Zero
+subBN bn Zero = bn
 subBN Zero (BN sign digits) = BN (not sign) digits
-subBN (BN _ digitsA) (BN True digitsB) = 
-subBN (BN _ _) (BN False _) = somaBN (BN __ _) (BN False _)
+subBN (BN True digitsA) (BN True digitsB)                                                               {-} a - b  -}
+    | result == 2 || result == 4 = Zero                                                                 {-} If b > a do b - a and the negate the result 100 - 120 = -(120-100)-}
+    | result == 0 = BN True (subBNaux 0 digitsA digitsB)
+    | result == 1 = notBN (BN True (subBNaux 0 digitsB digitsA)) 
+    | otherwise = error "Bad comparison"
+    where result = biggerBN (BN True digitsB) (BN True digitsA)  
+subBN (BN False digitsA) (BN False digitsB) = subBN (BN True digitsB) (BN True digitsA)                 {-} -a - (-b) <=> -a + b <=> b -a  -}                                                       
+subBN (BN True digitsA) (BN False digitsB) = somaBN (BN True digitsA) (BN True digitsB)                 {-} a - (-b) <=> a + b -}
+subBN (BN False digitsA) (BN True digitsB) = notBN (somaBN (BN True digitsB) (BN False digitsA))        {-} -a - b <=> - (a+b) -}
 
 
 subBNaux :: Int -> [Int] -> [Int] -> [Int]
+subBNaux 0 [] b = b
+subBNaux 0 a [] = a 
+subBNaux inc [] [] = [inc]
+subBNaux inc a [] = subBNaux  (abs (div sub' 10)) (init a) [] ++ [mod sub' 10]
+    where sub' = last a - inc
+subBNaux inc [] b = subBNaux  (abs (div sub'' 10)) [] (init b) ++ [mod sub'' 10]
+    where sub'' = - last b - inc
+subBNaux inc a b = dropWhile(==0) (subBNaux (abs (div sub''' 10)) (init a) (init b) ++ [mod sub''' 10])
+    where sub''' = last a - inc - last b
 
 mulBN :: BigNumber -> BigNumber -> BigNumber
 mulBN Zero _ = Zero
