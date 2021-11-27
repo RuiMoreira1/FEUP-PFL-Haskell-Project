@@ -4,10 +4,12 @@
  fibRec 1 = 1
  fibRec n = fibRec(n-1) + fibRec(n-2)
 
-fibLista = zipWith (+) (1:fibLista) (0:1:fibLista)
+--Fibonacci partial list implementation
+--fibLista = zipWith (+) (1:fibLista) (0:1:fibLista)
 
---fibRecBN
+--Fibonacci infinit List implementation
+ fibListaInfinita :: Int -> Integer
+ fibListaInfinita n = fib !! n
+    where
+      fib = 0 : 1 : zipWith (+) fib (tail fib)
 
---fibListaBN
-
---fibListaInfinitaBN
