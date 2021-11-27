@@ -55,8 +55,6 @@ biggerBN (BN _ digitsA) (BN _ digitsB)
     | head digitsB > head digitsA = 1
     | otherwise = biggerBN (BN True (tail digitsA)) (BN True (tail digitsB)) {-} In case the heads are equal compare the next number -}
 
-
-
 notBN :: BigNumber -> BigNumber
 notBN Zero = Zero
 notBN (BN sign digits) = BN (not sign) digits
@@ -67,9 +65,8 @@ somaBN Zero (BN sign digits) = BN sign digits
 somaBN (BN sign digits) Zero = BN sign digits
 somaBN (BN False digitsA) (BN False digitsB) = notBN (BN True (somaBNaux 0 digitsA digitsB))             {-} -a + (-b) <=> -a - b <=> -(a+b) -}
 somaBN (BN True digitsA) (BN True digitsB) = BN True (somaBNaux 0 digitsA digitsB)                       {-} a + b  -}
-somaBN (BN True digitsA) (BN False digitsB) = subBN (BN True digitsA) (BN False digitsB)                 {-} a + (-b) <=> a - b -}
-somaBN (BN False digitsA) (BN True digitsB) = subBN (BN True digitsB) (BN False digitsA)                 {-} -a + b <=> b - a -}
-
+somaBN (BN True digitsA) (BN False digitsB) = subBN (BN True digitsA) (BN True digitsB)                  {-} a + (-b) <=> a - b -}
+somaBN (BN False digitsA) (BN True digitsB) = subBN (BN True digitsB) (BN True digitsA)                  {-} -a + b <=> b - a -}
 
 {-} One strategy would be giving the function the big number list already reversed
 and using head and tail, but he have the init and last functions that to the exact 
@@ -94,7 +91,6 @@ somaBNaux inc a b = somaBNaux (div sum''' 10) (init a) (init b) ++ [mod sum''' 1
     where 
         sum''' = last a + last b + inc
 
-
 subBN :: BigNumber -> BigNumber -> BigNumber
 subBN Zero Zero = Zero
 subBN bn Zero = bn
@@ -107,8 +103,7 @@ subBN (BN True digitsA) (BN True digitsB)                                       
     where result = biggerBN (BN True digitsB) (BN True digitsA)  
 subBN (BN False digitsA) (BN False digitsB) = subBN (BN True digitsB) (BN True digitsA)                 {-} -a - (-b) <=> -a + b <=> b -a  -}                                                       
 subBN (BN True digitsA) (BN False digitsB) = somaBN (BN True digitsA) (BN True digitsB)                 {-} a - (-b) <=> a + b -}
-subBN (BN False digitsA) (BN True digitsB) = notBN (somaBN (BN True digitsB) (BN False digitsA))        {-} -a - b <=> - (a+b) -}
-
+subBN (BN False digitsA) (BN True digitsB) = notBN (somaBN (BN True digitsB) (BN True digitsA))        {-} -a - b <=> - (a+b) -}
 
 subBNaux :: Int -> [Int] -> [Int] -> [Int]
 subBNaux 0 [] b = b
@@ -124,14 +119,29 @@ subBNaux inc a b = dropWhile(==0) (subBNaux (abs (div sub''' 10)) (init a) (init
 mulBN :: BigNumber -> BigNumber -> BigNumber
 mulBN Zero _ = Zero
 mulBN _ Zero = Zero
---mulBN (BN False digitsA) (BN True digitsB) = (BN False )
---mulBN (BN True digitsA) (BN False digitsB) = (BN False )
---mulBN (BN _ digitsA) (BN _ digitsB) = (BN True )
+mulBN (BN False digitsA) (BN True digitsB) = notBN (BN True (mulBNaux digitsA digitsB))                                    {-} -a * b <=> - (a*b) -}
+mulBN (BN True digitsA) (BN False digitsB) = notBN (BN True (mulBNaux digitsA digitsB))                                    {-} a * -b <=> - (a*b) -}
+mulBN (BN True digitsA) (BN True digitsB) = BN True (mulBNaux digitsA digitsB)                                             {-} a * b -}
+mulBN (BN False digitsA) (BN False digitsB) = BN True (mulBNaux digitsA digitsB)                                           {-} -a * -b <=> a *b -}
 
+mulBNaux :: [Int] -> [Int] -> [Int]
+mulBNaux [] _ = []
+mulBNaux _ [0] = []
+mulBNaux _ [] = []
+mulBNaux digitsA digitsB = somaBNaux 0 digitsA (mulBNaux digitsA (subBNaux 0 digitsB [1]))
 
---divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
---divBN b1 b2 = 
-
---subtrair
---count n times
-
+divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
+divBN Zero _ = (Zero,Zero)
+divBN _ Zero = error "Diving by Zero" 
+divBN (BN False digitsA) (BN True digitsB) = let y = divBNaux [] digitsA digitsB in (BN False (fst y), BN True (snd y)) 
+divBN (BN True digitsA) (BN True digitsB) = let y = divBNaux [] digitsA digitsB in (BN True (fst y), BN True (snd y))
+divBN (BN True digitsA) (BN False digitsB) = let y = divBNaux [] digitsA digitsB in (BN False (fst y), BN True (snd y))
+divBN (BN False digitsA) (BN False digitsB) = let y = divBNaux [] digitsA digitsB in (BN True (fst y), BN True (snd y))
+    
+divBNaux :: [Int] -> [Int] -> [Int] -> ([Int],[Int])
+divBNaux _ _ [0] = error "Diving by Zero"
+divBNaux _ [0] _ = ([0],[0])
+divBNaux a digitsA digitsB 
+    | biggerBN (BN True digitsA) (BN True digitsB) == 1 = (a, digitsA)
+    | otherwise = divBNaux (somaBNaux 0 a [1]) list digitsB
+    where list = subBNaux 0 digitsA digitsB
