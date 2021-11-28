@@ -35,12 +35,6 @@ fibRecBN (BN _ n) = somaBN (fibRecBN n1) (fibRecBN n2)
     where n1 = subBN (BN True n) (BN True [1])
           n2 = subBN (BN True n) (BN True [2])
 
--- Converts Int into a list of Ints
-intToList :: Int -> [Int]
-intToList 0 = []
-intToList n =  intToList x ++ [n `mod` 10]
-    where x = n `div` 10
-
 --1.5: Fibonacci dynamic programming list implementation
 fibListaBN :: Int -> BigNumber
 fibListaBN = fibListaAuxBN [] 2

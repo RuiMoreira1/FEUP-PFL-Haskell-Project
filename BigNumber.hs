@@ -1,12 +1,43 @@
-module BigNumber (BigNumber (..), scanner, output, somaBN, subBN, mulBN, divBN, notBN) where
+module BigNumber (BigNumber (..), scanner, output, somaBN, subBN, mulBN, divBN, notBN, bnToInt, intToBN, bnFractionalToInt) where
 
 import Data.Char(digitToInt, intToDigit)
-import Distribution.Compat.Lens (_1)
 
 {- BigNumber Definition (2.1) -}
 data BigNumber = BN Bool [Int] | Zero deriving (Show)
+instance Eq BigNumber where
+    Zero == Zero = True
+    (BN signA digitsA) == (BN signB digitsB) = (signA == signB) && (trimInts digitsA == trimInts digitsB)
 
 {- Util functions -}
+
+-- Converts a BigNumber to an Int
+bnToInt :: BigNumber -> Int
+bnToInt Zero = 0
+bnToInt (BN True digits) = listToInt digits 
+bnToInt (BN False digits) = negate(listToInt digits)
+
+-- Converts tuple of BigNumbers into a Int
+bnFractionalToInt :: (BigNumber, BigNumber) -> Int 
+bnFractionalToInt (Zero, Zero) = 0
+bnFractionalToInt (Zero, BN _ _) = 0
+bnFractionalToInt (BN sign digits, _) = bnToInt(BN sign digits)
+
+-- Converts and Int to a BigNumber
+intToBN :: Int -> BigNumber
+intToBN n | n == 0 = Zero
+          | n > 0 = BN True (intToList n)
+          | n < 0 = BN False (intToList (negate n))
+
+-- Converts Int into a list of Ints
+-- pre-condition: positive numbers only
+intToList :: Int -> [Int]
+intToList 0 = []
+intToList n =  intToList x ++ [n `mod` 10]
+    where x = n `div` 10
+
+-- Converts Int list to an Int (point free function)
+listToInt :: [Int] -> Int
+listToInt = foldl ((+).(*10)) 0
 
 -- Converts a String to a list of Ints
 stringToNumbers :: String -> [Int]
@@ -122,13 +153,13 @@ scanner s |  trimString s == "0" || '+':xs == "+0" || '-':xs == "-0" = Zero
           | otherwise = error "Input value following this sintax: [+|-]*[0|1|2|3|4|5|6|7|8|9]*"
           where xs = trimString (tail s)
 
---2.2: output - Converts a BigNumber into a String
+--2.3: output - Converts a BigNumber into a String
 output :: BigNumber -> String
 output Zero = "0"
 output (BN False digits) = "-" ++ trimString (numbersToString digits)
 output (BN True digits) = "+" ++ trimString (numbersToString digits)
 
---2.3: Adds two BigNumbers together
+--2.4: Adds two BigNumbers together
 somaBN :: BigNumber -> BigNumber -> BigNumber
 somaBN Zero Zero = Zero
 somaBN Zero (BN sign digits) = BN sign digits
@@ -138,7 +169,7 @@ somaBN (BN True digitsA) (BN True digitsB) = BN True (somaBNaux 0 digitsA digits
 somaBN (BN True digitsA) (BN False digitsB) = subBN (BN True digitsA) (BN True digitsB)                       {-} (+a) + (-b) <=> a-b            -}
 somaBN (BN False digitsA) (BN True digitsB) = subBN (BN True digitsB) (BN True digitsA)                       {-} (-a) + (+b) <=> b-a            -}
 
---2.4: Subtracts two BigNumbers
+--2.5: Subtracts two BigNumbers
 subBN :: BigNumber -> BigNumber -> BigNumber
 subBN Zero Zero = Zero
 subBN bn Zero = bn
@@ -153,7 +184,7 @@ subBN (BN False digitsA) (BN False digitsB) = subBN (BN True digitsB) (BN True d
 subBN (BN True digitsA) (BN False digitsB) = somaBN (BN True digitsA) (BN True digitsB)                       {-} (+a) - (-b) <=> a+b           -}
 subBN (BN False digitsA) (BN True digitsB) = notBN (somaBN (BN True digitsB) (BN True digitsA))               {-} (-a) - (+b) <=> -(a+b)        -}
 
---2.5: Multiplies two BigNumber 
+--2.6: Multiplies two BigNumber 
 mulBN :: BigNumber -> BigNumber -> BigNumber
 mulBN Zero _ = Zero
 mulBN _ Zero = Zero
@@ -162,7 +193,7 @@ mulBN (BN True digitsA) (BN False digitsB) = BN False (mulBNaux digitsA digitsB)
 mulBN (BN True digitsA) (BN True digitsB) = BN True (mulBNaux digitsA digitsB)                                {-} (+a) * (+b) <=> a*b           -}
 mulBN (BN False digitsA) (BN False digitsB) = BN True (mulBNaux digitsA digitsB)                              {-} (-a) * (-b) <=> a*b           -}
 
---2.6: Division between two BigNumbers
+--2.7: Division between two BigNumbers
 divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
 divBN Zero _ = (Zero,Zero)
 divBN _ Zero = error "Diving by Zero"
