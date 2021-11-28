@@ -4,33 +4,29 @@ import Test.QuickCheck ( (==>), withMaxSuccess, quickCheck, Property )
 
 {- Tests for the Fibonacci Functions -}
 
--- made with extern data retrieved from "https://planetmath.org/listoffibonaccinumbers"
-fibonacciList :: [Int]
-fibonacciList = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040]
-
 -- fibRec function (1.1) tests
 testFibRec :: Int -> Property
-testFibRec n = (n < 10) ==> (fibRec n) == (fibonacciList !! n)
+testFibRec n = (n > 2) && (n < 22) ==> fibRec n == fibRec(n-1) + fibRec(n-2)
 
 -- fibLista function (1.2) tests
 testFibLista :: Int -> Property
-testFibLista n = (n < 30) ==> fibLista n == fibonacciList !! n
+testFibLista n = (n > 2) && (n < 22) ==> fibLista n == fibLista(n-1) + fibLista(n-2)
 
 -- fibListaInfinita function (1.3) tests
 testFibListaInfinita :: Int -> Property
-testFibListaInfinita n = (n < 30) ==> fibListaInfinita n == fibonacciList !! n
+testFibListaInfinita n = (n > 2) && (n < 22) ==> fibListaInfinita n == fibListaInfinita(n-1) + fibListaInfinita(n-2)
 
 -- fibRecBN function (1.4) tests
 testFibRecBN :: Int -> Property
-testFibRecBN n = (n < 30) ==> bnToInt (fibRecBN (BN True (intToList n))) == fibonacciList !! n
+testFibRecBN n = (n > 2) && (n < 22) ==> bnToInt (fibRecBN (BN True (intToList n))) == bnToInt (fibRecBN (BN True (intToList (n-1)))) + bnToInt (fibRecBN (BN True (intToList (n-2))))
 
 -- fibListaBN function (1.5) tests
 testFibListaBN :: Int -> Property
-testFibListaBN n = (n < 30) ==>  bnToInt (fibListaBN n) == fibonacciList !! n
+testFibListaBN n = (n > 2) && (n < 22) ==>  bnToInt (fibListaBN n) == bnToInt (fibListaBN (n-1)) + bnToInt (fibListaBN (n-2))
 
 -- fibListaInfinitaBN function (1.6) tests
 testFibListaInfinitaBN :: Int -> Property
-testFibListaInfinitaBN n = (n < 30) ==> bnToInt (fibListaInfinitaBN n) == fibonacciList !! n
+testFibListaInfinitaBN n = (n > 2) && (n < 22) ==> bnToInt (fibListaInfinitaBN n) == bnToInt (fibListaInfinitaBN (n-1)) + bnToInt (fibListaInfinitaBN (n-2))
 
 {- Tests for the BigNumber module -}
 
@@ -60,7 +56,7 @@ testOutput = if and
     BigNumber.output (BN False [0,0,3,4,5,0]) == "-3450"]
     then putStrLn (testName ++ "PASSED")
     else putStrLn (testName ++ "FAILED")
-    where testName = "Tests to ouput [BigNumber module] function -> " 
+    where testName = "Tests to ouput   [BigNumber module] function -> " 
 
 -- somaBN function (2.4) tests
 testSomaBN :: Int -> Int -> Bool
@@ -78,20 +74,20 @@ testMulBN x y = x * y == bnToInt( mulBN (intToBN x) (intToBN y))
 testDivBN :: Int -> Int -> Property
 testDivBN x y = (x > 0) && (y > 0) ==> x `div` y == bnFractionalToInt( divBN (intToBN x) (intToBN y))
 
-
 main :: IO()
 main = do
-    putStrLn "Fibonacci Function Tests"
-    quickCheck (withMaxSuccess 100 testFibRec){-}
+    putStrLn "\n####### Fibonacci Function Tests #######\n"
+    quickCheck (withMaxSuccess 100 testFibRec)
     quickCheck (withMaxSuccess 100 testFibLista)
     quickCheck (withMaxSuccess 100 testFibListaInfinita)
     quickCheck (withMaxSuccess 100 testFibRecBN)
     quickCheck (withMaxSuccess 100 testFibListaBN)
-    quickCheck (withMaxSuccess 100 testFibListaInfinitaBN) -}
-    putStrLn "BigNumber Function Tests"
+    quickCheck (withMaxSuccess 100 testFibListaInfinitaBN)
+    putStrLn "\n####### BigNumber Function Tests #######\n"
     testScanner
     testOutput
     quickCheck (withMaxSuccess 100 testSomaBN)
     quickCheck (withMaxSuccess 100 testSubBN)
     quickCheck (withMaxSuccess 100 testMulBN)
     quickCheck (withMaxSuccess 100 testDivBN)
+    putStrLn ""
