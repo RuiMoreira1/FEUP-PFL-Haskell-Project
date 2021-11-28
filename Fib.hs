@@ -1,3 +1,5 @@
+module Fib (fibRec, fibLista, fibListaInfinita, fibRecBN, fibListaBN, fibListaInfinitaBN) where
+
 import BigNumber ( BigNumber(..), somaBN, subBN )
 
 {- Fibonacci Integral functions -}
@@ -21,8 +23,8 @@ fibListaAux lista i n
             | i>n = last lista
 
 --1.3: Fibonacci infinit List implementation
-fibListaInfinita :: Int -> Integer
-fibListaInfinita n = fib !! n
+fibListaInfinita :: Integral a => a -> a
+fibListaInfinita n = fib !!  fromIntegral n
   where fib = 0 : 1 : zipWith (+) fib (tail fib)
 
 {- Fibonacci BigNumber Functions -}
