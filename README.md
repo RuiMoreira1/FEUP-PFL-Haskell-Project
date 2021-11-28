@@ -64,7 +64,11 @@ Project developed for PFL unit
 
 ## Strategies used on implementig BigNumber functions
 
+### Data Definition
+
 - The BigNumbers (Numbers in which the size is only limited by the computer memory) definition was created with the intent of simplifying the further development of the functions needed to manipulate them. Therefore, we define a constructor BN as being a list of digits and a Bool dictating the sign `(True: positive, False: negative)`. However, 0 dos not has sign, so we added a constructor (Zero) to represent it.
+
+### Main BigNumber Manipulation Functions
 
 - **scanner**: When the String is in the correct format following this Regular Expression `(+|-)(0|1|2|3|4|5|6|7|8|9)* + (+|-|ε)(0)*`, otherwise an error is shown. The convertion is done firstly by checking the sign and atributting the correspondant Bool in the BigNumber (True -> positive, False -> negative) and then converting the numbers int a list of Ints using stringToNumbers() util function. When one or multiple 0 are inputted, we call the Zero constructor of BigNumber data. It also removes the trailling zeros from the String using `trimString()` util function.
 
@@ -84,6 +88,16 @@ When both (a and b) are none Zero numbers:
 - **mulBN**:
 
 - **divBN**: 
+
+### Auxiliary BigNumber Calculations Functions
+
+- **somaBNaux**:
+
+- **subBNaux**:
+
+- **mulBNaux**:
+
+- **divBNaux**:
 
 ## Function Comparisons (answer to topic 4)
 
