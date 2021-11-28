@@ -21,44 +21,52 @@ Project developed for PFL unit
 
 - **1.2 fibLista**: This function is based in fibRec, however, taking advantage of a `dynamic programming` approach. It saves the calculated results in a list that it is passed to the next function calls, retrivieng the values need from that list and preventing multiple computations of the same value. In order to achieve this, fibLista() uses an external auxiliary function `fibListaAux()`.
 
-- **1.3 fibListaInfinita**: In contrary to the last function that uses finite lists, this one takes advantage of infinit lists. Due to the lazy computation feature of Haskell, the list is only calculated upon what it is requested.
+- **1.3 fibListaInfinita**: In contrary to the last function that uses finite lists, this one takes advantage of `infinit lists`. Due to the lazy computation feature of Haskell, the list is only calculated upon what it is requested.
 
-- **1.4 fibRecBN**: 
-
-- **1.5 fibListaBN**: 
-
-- **1.6 fibListaInfinitaBN**:
+- **1.4 fibRecBN**, **1.5 fibListaBN** and **1.6 fibListaInfinitaBN**: This group of functions work exactly the same way the ones previously explained, but with the integration  of BigNumbers.
 
 ### BigNumber Functions
 This functions are succinctly described, because in the next section they are detailed explained.
 
-- **scanner**: Converts a String into a BigNumber.
+- **2.2 scanner**: Converts a String into a BigNumber.
 
-- **output**: Converts a BigNumber into a String.
+- **2.3 output**: Converts a BigNumber into a String.
 
-- **somaBN**: Adds two BigNumbers together, returning the result in a BigNumber.
+- **2.4 somaBN**: Adds two BigNumbers together, returning the result in a BigNumber.
 
-- **subBN**: Substracts one BigNumber from another.
+- **2.5 subBN**: Substracts one BigNumber from another.
 
-- **mulBN**: Multiplies two BigNumbers together.
+- **2.6 mulBN**: Multiplies two BigNumbers together.
 
-- **divBN**: Divides one BigNumber by another.
+- **2.7 divBN**: Divides one BigNumber by another.
+
+- **3 safeDivBN**: Divides one BigNumber by another, by making use of `Maybe` Preludes data to solve division by 0 problem, returning Nothing in that case.
 
 ### BigNumber Util functions
 
-- **numbersToString**: Converts an array of Int's into a String (an array of Char's).
+- **bnToInt**: Converts a BigNumber into an Int.
+
+- **intToBN**: Converts an Int into a BigNumber.
+
+- **bnFractionalToInt**: Converts a tuple of BigNumbers retrieved from divBN, into an Int.
+
+- **intToList**: Converts an Int to a list of Ints.
+
+- **listToInt**: Converts a list of Ints into an Int.
 
 - **stringToNumbers**: Converts a String into an array of Int's. When the String has non digits characters, it is outputted the correspondant error, by digitToInt() prelude function.
+
+- **numbersToString**: Converts an array of Int's into a String (an array of Char's).
 
 - **trimString**: Removes all the trailling '0' characters from the beginning of the String, until a different one is found.
 
 - **trimInts**: Removes all the trailling 0's from an array of Int's from the beginning of the array, until it is found a none 0 Int.
 
+- **biggerBN**: Compares two BigNumbers (a and b) and returns 0, if a > b, 1 if b > a, 2 if a == b, 4 if both numbers are Zeros
+
 - **notBN**: Negates a BigNumber, by changing its sign (Bool). Zero prevails Zero.
 
-- **biggerBN**:
-
-- **somaBNaux**:
+- **somaBNaux**: 
 
 - **subBNaux**:
 
@@ -66,6 +74,7 @@ This functions are succinctly described, because in the next section they are de
 
 - **divBNaux**:
 
+- **divAuxEmptyToZero**:
 
 ## Strategies used on implementig BigNumber functions
 
