@@ -200,6 +200,6 @@ Note: the higher values were not tested in the naive strategies, because of the 
 
 ### Conclusion
 
-* After all these tests we observe that the execution times of naive functions are greater than the rest of the strategies used. Moreover, the use of the dynamic programming strategies with infinit list seems to be faster than the dynamic programming approach with finite lists.
+* After all these tests we observed that the execution times of naive functions are greater than the rest of the strategies used. Moreover, the use of the dynamic programming strategies with infinit list seems to be faster than the dynamic programming approach with finite lists.
 
 * The Fibonacci functions with BigNumber integration are in general slower than the ones implemented with Integers (Int and Integers).
