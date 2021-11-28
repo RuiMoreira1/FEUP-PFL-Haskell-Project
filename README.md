@@ -7,7 +7,7 @@ Project developed for PFL unit
 * Rui Pedro Mendes Moreira **up201906355**
 * Sérgio Rodrigues da Gama **up201906690**
 
-## Test Cases
+## Test Cases 
 
 - There are tests for all the main BigNumber and Fibonacci modules functions in the Tests.hs file. The tests for `output and scanner` were done with `IO Monad`, comparing some expected values with the ones computed by those functions and returning PASSED or FAILED to the screen.
 
@@ -66,15 +66,15 @@ This functions are succinctly described, because in the next section they are de
 
 - **notBN**: Negates a BigNumber, by changing its sign (Bool). Zero prevails Zero.
 
-- **somaBNaux**: 
+- **somaBNaux**: Sums two numbers in a form of lists of Ints and returns a list of Ints with the result.
 
-- **subBNaux**:
+- **subBNaux**: Subtracts two numbers in a form of lists of Ints and returns a list of Ints with the result.
 
-- **mulBNaux**:
+- **mulBNaux**: Multiplies two numbers in a form of lists of Ints and returns a list of Ints with the result.
 
-- **divBNaux**:
+- **divBNaux**: Divides one number by another, both in a form of lists of Ints and returns a list of Ints with the result.
 
-- **divAuxEmptyToZero**:
+- **divAuxEmptyToZero**: Converts a tuple of lists of Ints into a tuple of correspondant BigNumbers.
 
 ## Strategies used on implementig BigNumber functions
 
@@ -114,6 +114,8 @@ When both (a and b) are none Zero numbers:
 - **divBNaux**:
 
 ## Function Comparisons (answer to topic 4)
+
+For this comparison we used `:set +s` in ghci to see the execution time of the Fibonacci module functions for the same 3 values 5 times and made the average of those trials.
 
 ### Int 
 
