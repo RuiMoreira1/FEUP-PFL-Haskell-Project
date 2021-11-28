@@ -88,20 +88,28 @@ This functions are succinctly described, because in the next section they are de
 
 - **output**: When the BigNumber it is Zero, returns "0", otherwise it checks for the number signal and parses into "+" or "-", followed by the concatenation of the digits previously converted and trimmed with the composed function made by `trimString . numbersToString` functions. 
 
-- **somaBN**: SomaBN is composed by the 6 cases that can occour in addition operation:
+- **somaBN**: somaBN is composed by the 6 cases that can occour in addition operation:
 Both numbers are Zero -> returns Zero
 Only one number is Zero -> returns the other number
 When both (a and b) are none Zero numbers:
-(-a) + (-b) <=> -a - b <=> -(a+b)  -> returns the sum of a + b, through somaBNaux() function, and its sign to False (meaning a negative number)
-(+a) + (+b) <=> a + b -> returns the sum of a + b, through somaBNaux() function, and its sign to True (meaning a positive number)
-(+a) + (-b) <=> a - b -> returns the subtraction of a - b, by calling the subBN function with a (positive) and b (positive, opposite of the inputted)
-(-a) + (+b) <=> b - a -> returns the subtraction of b - a, by calling the subBN function with b (positive) and a (positive, opposite of the inputted)
+(-a) + (-b) <=> -a - b <=> -(a+b)  -> returns the sum of a + b, through `somaBNaux()` function, and its sign to False (meaning a negative number)
+(+a) + (+b) <=> a + b -> returns the sum of a + b, through `somaBNaux()` function, and its sign to True (meaning a positive number)
+(+a) + (-b) <=> a - b -> returns the subtraction of a - b, by calling the subBN() function with a (positive) and b (positive, opposite of the inputted)
+(-a) + (+b) <=> b - a -> returns the subtraction of b - a, by calling the subBN() function with b (positive) and a (positive, opposite of the inputted)
 
-- **subBN**:
+- **subBN**: subBN is composed by the 7 cases that can occour in subtraction operation:
+Both numbers are Zero -> returns Zero
+The first number is Zero -> returns the second number negated
+The second number is Zero -> returns the other number
+When both (a and b) are none Zero numbers:
+(+a) - (+b) <=> a - b -> returns the subtraction of a - b, through `subBNaux()` function, and its sign is given upon the value returned by `biggerBN()` function 
+(-a) - (-b) <=> b - a -> returns the sum of b - a,  by calling the subBN function with a (positive) and b (positive)
+(+a) - (-b) <=> a + b -> returns the subtraction of a + b, by calling the somaBN() function with a (positive) and b (positive)
+(-a) - (+b) <=> -(a + b) -> returns the subtraction of a + b, by calling the somaBN() function with a (positive) and b (positive), followed by the negation of the BigNumber through `notBN()` function.
 
-- **mulBN**:
+- **mulBN**: mulBN basicly calls `mulBNaux()` with both numbers digits list and returns a BigNumber with that result and the correspondat sign.
 
-- **divBN**: 
+- **divBN**: Like mulBN, divBN calls `divBNaux()` with both numbers digits list and returns a tuple of two BigNumbers with the result from divBNaux(), that is previously converted from ([Int],[Int]) to a tuple of BigNumbers using `divAuxEmptyToZero()` function.
 
 ### Auxiliary BigNumber Calculations Functions
 
@@ -115,10 +123,74 @@ When both (a and b) are none Zero numbers:
 
 ## Function Comparisons (answer to topic 4)
 
-For this comparison we used `:set +s` in ghci to see the execution time of the Fibonacci module functions for the same 3 values 5 times and made the average of those trials.
+We used `:set +s` in ghci to see the execution time of the Fibonacci module functions for Integrals and for BigNumbers, to observate the differences, we tested the execution for the same 3 values 5 times and made the average of those trials. 
 
-### Int 
+Values tested: 15, 25, 30, 50 and 500
 
-### Integer
+Note: the higher values were not tested in the naive strategies, because of the computation time too big. Execution time is in seconds.
+
+### Integrals
+
+__fibRec__ 
+
+|    | 1    | 2    | 3    | 4    | 5    | Average |
+|----|------|------|------|------|------|---------|
+| 15 | 0.01 | 0.01 | 0.01 | 0.01 | 0.01 | 0.01    |
+| 25 | 0.41 | 0.42 | 0.49 | 0.40 | 0.40 | 0.424   |
+| 30 | 4.58 | 5.16 | 5.22 | 5.40 | 4.98 | 5.068   |
+
+__fibLista__
+
+|     | 1    | 2    | 3    | 4    | 5    | Average |
+|-----|------|------|------|------|------|---------|
+| 15  | 0    | 0    | 0    | 0    | 0    | 0       |
+| 25  | 0    | 0    | 0    | 0    | 0    | 0       |
+| 30  | 0    | 0    | 0    | 0    | 0    | 0       |
+| 50  | 0.01 | 0    | 0    | 0.01 | 0.01 | 0.006   |
+| 500 | 0.06 | 0.02 | 0.02 | 0.02 | 0.02 | 0.028   |
+
+__fibListaInfinita__
+
+|     | 1    | 2    | 3    | 4    | 5    | Average |
+|-----|------|------|------|------|------|---------|
+| 15  | 0    | 0    | 0    | 0    | 0    | 0       |
+| 25  | 0    | 0    | 0    | 0    | 0    | 0       |
+| 30  | 0    | 0    | 0    | 0    | 0    | 0       |
+| 50  | 0.01 | 0    | 0    | 0.01 | 0    | 0.004   |
+| 500 | 0.01 | 0.01 | 0.01 | 0.01 | 0.01 | 0.01    |
 
 ### BigNumber
+
+__fibRecBN__
+
+|     | 1    | 2     | 3     | 4     | 5    | Average |
+|-----|------|-------|-------|-------|------|---------|
+| 15  | 0.02 | 0.02  | 0.02  | 0.02  | 0.02 | 0.02    |
+| 25  | 1.71 | 1.69  | 1.86  | 1.72  | 1.67 | 1.73    |
+| 30  | 18.3 | 20.38 | 20.36 | 20.62 | 20.1 | 19.952  |
+
+__fibListaBN__
+
+|     | 1    | 2    | 3    | 4    | 5    | Average |
+|-----|------|------|------|------|------|---------|
+| 15  | 0    | 0    | 0    | 0    | 0    | 0       |
+| 25  | 0    | 0    | 0    | 0    | 0    | 0       |
+| 30  | 0    | 0    | 0    | 0    | 0    | 0       |
+| 50  | 0.01 | 0.01 | 0.01 | 0    | 0    | 0.006   |
+| 500 | 0.11 | 0.11 | 0.10 | 0.10 | 0.11 | 0.106   |
+
+__fibListaInfinitaBN__
+
+|     | 1    | 2    | 3    | 4    | 5    | Average |
+|-----|------|------|------|------|------|---------|
+| 15  | 0    | 0    | 0    | 0    | 0    | 0       |
+| 25  | 0    | 0    | 0    | 0    | 0    | 0       |
+| 30  | 0    | 0    | 0    | 0    | 0    | 0       |
+| 50  | 0.01 | 0    | 0    | 0    | 0    | 0.002   |
+| 500 | 0.09 | 0.10 | 0.10 | 0.10 | 0.10 | 0.098   |
+
+### Conclusion
+
+- After all these tests we observe that the execution times of naive functions are greater than the rest of the strategies used. Moreover, the use of the dynaic programming strategie with infinit list seems to be faster than the dynamic programming approach with finite lists. 
+
+- The Fibonacci functions with BigNumber integration are in general slower than the ones implemented with Integers (Int and Integers).
