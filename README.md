@@ -89,23 +89,23 @@ This functions are succinctly described, because in the next section they are de
 - **output**: When the BigNumber it is Zero, returns "0", otherwise it checks for the number signal and parses into "+" or "-", followed by the concatenation of the digits previously converted and trimmed with the composed function made by `trimString . numbersToString` functions. 
 
 - **somaBN**: somaBN is composed by the 6 cases that can occour in addition operation:
-Both numbers are Zero -> returns Zero
-Only one number is Zero -> returns the other number
-When both (a and b) are none Zero numbers:
-(-a) + (-b) <=> -a - b <=> -(a+b)  -> returns the sum of a + b, through `somaBNaux()` function, and its sign to False (meaning a negative number)
-(+a) + (+b) <=> a + b -> returns the sum of a + b, through `somaBNaux()` function, and its sign to True (meaning a positive number)
-(+a) + (-b) <=> a - b -> returns the subtraction of a - b, by calling the subBN() function with a (positive) and b (positive, opposite of the inputted)
-(-a) + (+b) <=> b - a -> returns the subtraction of b - a, by calling the subBN() function with b (positive) and a (positive, opposite of the inputted)
+  - Both numbers are Zero -> returns Zero
+  - Only one number is Zero -> returns the other number
+  - When both (a and b) are none Zero numbers:
+  - (-a) + (-b) <=> -a - b <=> -(a+b)  -> returns the sum of a + b, through `somaBNaux()` function, and its sign to False (meaning a negative number)
+  - (+a) + (+b) <=> a + b -> returns the sum of a + b, through `somaBNaux()` function, and its sign to True (meaning a positive number)
+  - (+a) + (-b) <=> a - b -> returns the subtraction of a - b, by calling the subBN() function with a (positive) and b (positive, opposite of the inputted)
+  - (-a) + (+b) <=> b - a -> returns the subtraction of b - a, by calling the subBN() function with b (positive) and a (positive, opposite of the inputted)
 
 - **subBN**: subBN is composed by the 7 cases that can occour in subtraction operation:
-Both numbers are Zero -> returns Zero
-The first number is Zero -> returns the second number negated
-The second number is Zero -> returns the other number
-When both (a and b) are none Zero numbers:
-(+a) - (+b) <=> a - b -> returns the subtraction of a - b, through `subBNaux()` function, and its sign is given upon the value returned by `biggerBN()` function 
-(-a) - (-b) <=> b - a -> returns the sum of b - a,  by calling the subBN function with a (positive) and b (positive)
-(+a) - (-b) <=> a + b -> returns the subtraction of a + b, by calling the somaBN() function with a (positive) and b (positive)
-(-a) - (+b) <=> -(a + b) -> returns the subtraction of a + b, by calling the somaBN() function with a (positive) and b (positive), followed by the negation of the BigNumber through `notBN()` function.
+  - Both numbers are Zero -> returns Zero
+  - The first number is Zero -> returns the second number negated
+  - The second number is Zero -> returns the other number
+  - When both (a and b) are none Zero numbers:
+  - (+a) - (+b) <=> a - b -> returns the subtraction of a - b, through `subBNaux()` function, and its sign is given upon the value returned by `biggerBN()` function 
+  - (-a) - (-b) <=> b - a -> returns the sum of b - a,  by calling the subBN function with a (positive) and b (positive)
+  - (+a) - (-b) <=> a + b -> returns the subtraction of a + b, by calling the somaBN() function with a (positive) and b (positive)
+  - (-a) - (+b) <=> -(a + b) -> returns the subtraction of a + b, by calling the somaBN() function with a (positive) and b (positive), followed by the negation of the BigNumber through `notBN()` function.
 
 - **mulBN**: mulBN basicly calls `mulBNaux()` with both numbers digits list and returns a BigNumber with that result and the correspondat sign.
 
