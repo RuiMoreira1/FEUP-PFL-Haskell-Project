@@ -9,23 +9,28 @@ Project developed for PFL unit
 
 ## Test Cases
 
+- There are tests for all the main BigNumber and Fibonacci modules functions in the Tests.hs file. The tests for `output and scanner` were done with `IO Monad`, comparing some expected values with the ones computed by those functions and returning PASSED or FAILED to the screen.
+
+- All the other tests were made with the help of QuickTest module, making a property function for the Fibonacci functions and somaBN, subBn, mulBN and divBn, from BigNumber module. Finaly, the tests are run in the main IO function, in order to execute all of them with one function call.
+
 ## Functions Descriptions
 
 ### Fibonacci Functions
 
 - **1.1 fibRec**: This function takes one argument which is the index of the Fibonacci sequence we want to have calculated. It is implemented using a `naive recursive strategy`, calculating the value fib(n), by adding fib(n-1) + fib(n-2), aside from the base cases which are fib(0) = 0 and fib(1) = 1;
 
-- **1.2 fibLista**:
+- **1.2 fibLista**: This function is based in fibRec, however, taking advantage of a `dynamic programming` approach. It saves the calculated results in a list that it is passed to the next function calls, retrivieng the values need from that list and preventing multiple computations of the same value. In order to achieve this, fibLista() uses an external auxiliary function `fibListaAux()`.
 
-- **1.3 fibListaInfinita**:
+- **1.3 fibListaInfinita**: In contrary to the last function that uses finite lists, this one takes advantage of infinit lists. Due to the lazy computation feature of Haskell, the list is only calculated upon what it is requested.
 
-- **1.4 fibRecBN**:
+- **1.4 fibRecBN**: 
 
 - **1.5 fibListaBN**: 
 
 - **1.6 fibListaInfinitaBN**:
 
 ### BigNumber Functions
+This functions are succinctly described, because in the next section they are detailed explained.
 
 - **scanner**: Converts a String into a BigNumber.
 
@@ -33,11 +38,11 @@ Project developed for PFL unit
 
 - **somaBN**: Adds two BigNumbers together, returning the result in a BigNumber.
 
-- **subBN**: Substracts two
+- **subBN**: Substracts one BigNumber from another.
 
-- **mulBN**:
+- **mulBN**: Multiplies two BigNumbers together.
 
-- **divBN**: 
+- **divBN**: Divides one BigNumber by another.
 
 ### BigNumber Util functions
 
