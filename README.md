@@ -15,15 +15,15 @@ Project developed for PFL unit
 
 - **1.1 fibRec**: This function takes one argument which is the index of the Fibonacci sequence we want to have calculated. It is implemented using a `naive recursive strategy`, calculating the value fib(n), by adding fib(n-1) + fib(n-2), aside from the base cases which are fib(0) = 0 and fib(1) = 1;
 
-- **1.2**:
+- **1.2 fibLista**:
 
-- **1.3**:
+- **1.3 fibListaInfinita**:
 
-- **1.4**:
+- **1.4 fibRecBN**:
 
-- **1.5**: 
+- **1.5 fibListaBN**: 
 
-- **1.6**:
+- **1.6 fibListaInfinitaBN**:
 
 ### BigNumber Functions
 
@@ -50,6 +50,8 @@ Project developed for PFL unit
 - **trimInts**: Removes all the trailling 0's from an array of Int's from the beginning of the array, until it is found a none 0 Int.
 
 - **notBN**: Negates a BigNumber, by changing its sign (Bool). Zero prevails Zero.
+
+- **biggerBN**:
 
 - **somaBNaux**:
 
