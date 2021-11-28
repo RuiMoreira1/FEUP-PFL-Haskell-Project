@@ -104,7 +104,7 @@ Brief BigNumber module function description, see [beneath](#main-bignumber-manip
   * The second number is Zero → returns the first number.
   * When both numbers (a and b) are none Zero numbers:
     * (+a) - (+b) <=> a - b → returns the subtraction of a - b, through `subBNaux()` function, and its signal is defined, after cheking the value returned by `biggerBN()` function.
-    * (-a) - (-b) <=> b - a → returns the subtraction of b - a,  by calling the `subBN` function with a (positive) and b (positive).
+    * (-a) - (-b) <=> b - a → returns the subtraction of b - a,  by calling the `subBN()` function with a (positive) and b (positive).
     * (+a) - (-b) <=> a + b → returns the addition of a + b, by calling the `somaBN()` function with a signal (positive) and b signal (positive).
     * (-a) - (+b) <=> -(a + b) → returns the addition of a + b, by calling the `somaBN()` function with a signal (positive) and b signal (positive), followed by the negation of the BigNumber through `notBN()` function.
 
